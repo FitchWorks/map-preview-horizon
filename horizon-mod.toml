@@ -1,0 +1,28 @@
+id = "map_preview"
+name = "Map Preview"
+version = "2.0.0"
+description = "See a map's picture in its tooltip and in its inventory slot, so you can tell your maps apart."
+authors = ["selfmonoraque5", "FitchWorks"]
+license = "MIT"
+license_url = "https://github.com/selfmonoraque5/map-preview/blob/main/LICENSE"
+credits = "Map item frames, locked glass and map background by FitchWorks. Inspired by Map Tooltip (VendoAU) and Map In Slot (Crec0); none of their code."
+homepage = "https://github.com/selfmonoraque5/map-preview"
+issues = "https://github.com/selfmonoraque5/map-preview/issues"
+api = "0.2"
+side = "client"
+capabilities = ["registries"]
+
+[native]
+game = "26.3"
+horizon = "f00125f61f794aaa3d4e950d301f353b35b6ee3d"
+mixins = "e59da9094f0c2fdda6c627fe9eff22dec6a906f0"
+
+# The mod API doesn't show a client mod a map's pixels, so the mod patches the
+# game's own `input_hud_begin` (each frame, before anything is drawn) to hand
+# them over; a later Horizon that changes it needs an update.
+[[native.mixin]]
+id = "maps"
+kind = "HEAD"
+target = "horizon_client::game::play_input::Game<'_>::input_hud_begin"
+helper = "src/mixins/maps.rs"
+bindings = [{ name = "game", ty = "&Game<'_>", value = "&*self" }]
